@@ -1,0 +1,1752 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8f4">
+  <title>৩০ দিনের Public Experiment System</title>
+  <link rel="icon" href="spm.ico">
+  <style>
+    :root {
+      color-scheme: light;
+      --page: #f7f8f4;
+      --surface: #ffffff;
+      --ink: #192923;
+      --muted: #60716a;
+      --line: #dce5df;
+      --green: #176b51;
+      --green-dark: #10533f;
+      --green-soft: #e8f3ed;
+      --code: #13231e;
+      --code-ink: #eaf5ef;
+      --shadow: 0 16px 48px rgba(25, 53, 40, .08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 1.5rem; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: "Noto Sans Bengali", "Hind Siliguri", "Noto Sans Bengali UI", system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.8;
+      overflow-wrap: anywhere;
+    }
+    a { color: var(--green); text-underline-offset: .18em; }
+    a:hover { color: var(--green-dark); }
+    .page-shell { width: min(100% - 2rem, 920px); margin-inline: auto; }
+    .hero { padding: clamp(2.25rem, 7vw, 5rem) 0 1.6rem; }
+    .hero h1 { margin: 0; max-width: 18ch; font-size: clamp(2rem, 6vw, 3.65rem); line-height: 1.22; letter-spacing: -.035em; }
+    .hero-mark { display: inline-block; width: 3.2rem; height: .28rem; margin-bottom: 1rem; border-radius: 99px; background: var(--green); }
+    .prompt-directory { margin: 0 0 2.25rem; }
+    .prompt-directory details { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+    .prompt-directory summary { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; cursor: pointer; list-style: none; font-weight: 750; color: var(--green-dark); }
+    .prompt-directory summary::-webkit-details-marker { display: none; }
+    .prompt-directory summary::after { content: "+"; display: grid; place-items: center; width: 1.8rem; height: 1.8rem; flex: 0 0 auto; border-radius: 50%; background: var(--green-soft); font-size: 1.15rem; }
+    .prompt-directory details[open] summary::after { content: "−"; }
+    .prompt-count { margin-left: auto; color: var(--muted); font-size: .85rem; font-weight: 550; }
+    .prompt-directory-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; padding: .2rem 1.2rem 1.25rem; border-top: 1px solid var(--line); }
+    .prompt-directory-content h2 { margin: .85rem 0 .5rem; color: var(--muted); font-size: .8rem; line-height: 1.45; letter-spacing: .045em; text-transform: uppercase; }
+    .prompt-directory ul { display: grid; gap: .25rem; margin: 0; padding: 0; list-style: none; }
+    .prompt-directory li a { display: block; padding: .34rem .45rem; border-radius: 8px; color: var(--ink); line-height: 1.5; text-decoration: none; }
+    .prompt-directory li a:hover, .prompt-directory li a:focus-visible { background: var(--green-soft); color: var(--green-dark); outline: none; }
+    .content { padding-bottom: 3rem; }
+    .content h1 { margin: 3.5rem 0 1.1rem; padding-top: .5rem; border-top: 1px solid var(--line); font-size: clamp(1.7rem, 4.4vw, 2.35rem); line-height: 1.35; letter-spacing: -.025em; }
+    .content h2 { margin: 2.25rem 0 .8rem; font-size: clamp(1.35rem, 3.3vw, 1.75rem); line-height: 1.4; }
+    .content h3 { margin: 1.75rem 0 .65rem; font-size: 1.18rem; line-height: 1.5; }
+    .content p { margin: .75rem 0 1rem; }
+    .content > p:first-child { font-size: 1.07rem; }
+    .content blockquote { margin: 1.2rem 0; padding: .85rem 1.15rem; border-left: 4px solid var(--green); border-radius: 0 12px 12px 0; background: var(--green-soft); color: #244b3c; }
+    .content blockquote p:last-child { margin-bottom: 0; }
+    .content hr { height: 1px; margin: 2.25rem 0; border: 0; background: var(--line); }
+    .content ul, .content ol { padding-left: 1.5rem; }
+    .content li { margin: .28rem 0; padding-left: .15rem; }
+    .content li::marker { color: var(--green); }
+    .content strong { color: #163e30; }
+    .content code:not(pre code) { padding: .12em .38em; border: 1px solid var(--line); border-radius: 5px; background: #edf2ee; font-size: .92em; }
+    .table-wrap { margin: 1.1rem 0 1.5rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); box-shadow: 0 8px 22px rgba(25, 53, 40, .045); }
+    .table-wrap:focus-visible { outline: 3px solid #83bea2; outline-offset: 3px; }
+    .table-wrap table { width: 100%; border-collapse: collapse; text-align: left; }
+    .table-wrap th, .table-wrap td { padding: .75rem .85rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .table-wrap thead th { background: #edf5ef; color: #1c4b37; font-size: .9rem; font-weight: 750; }
+    .table-wrap tbody tr:last-child td { border-bottom: 0; }
+    .table-wrap tbody tr:nth-child(even) { background: #fbfcfa; }
+    .code-card { margin: 1.1rem 0 1.5rem; overflow: hidden; border: 1px solid #30483e; border-radius: 14px; background: var(--code); box-shadow: 0 12px 28px rgba(14, 39, 29, .12); }
+    .code-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .62rem .85rem; border-bottom: 1px solid rgba(234, 245, 239, .13); }
+    .code-kind { color: #a9c8b8; font-size: .72rem; font-weight: 750; letter-spacing: .12em; }
+    .copy-button { min-height: 2.35rem; padding: .42rem .8rem; border: 1px solid rgba(232, 243, 237, .3); border-radius: 8px; background: #234c3d; color: #f5fff8; font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+    .copy-button:hover { background: #2e634d; }
+    .copy-button:focus-visible { outline: 3px solid #98d2b0; outline-offset: 2px; }
+    .code-card pre { max-height: 70vh; margin: 0; padding: 1rem 1.05rem 1.15rem; overflow: auto; color: var(--code-ink); font: .9rem/1.75 ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace; white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 2; }
+    .code-card code { font: inherit; }
+    .footer { padding: 1.7rem 0 2.2rem; border-top: 1px solid var(--line); color: var(--muted); text-align: center; font-size: .9rem; }
+    .copy-status { position: fixed; right: 1rem; bottom: 1rem; z-index: 5; padding: .55rem .85rem; border-radius: 9px; background: var(--ink); color: #fff; box-shadow: var(--shadow); opacity: 0; transform: translateY(.5rem); transition: opacity .18s ease, transform .18s ease; pointer-events: none; }
+    .copy-status.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 680px) {
+      .page-shell { width: min(100% - 1.15rem, 920px); }
+      .hero { padding-top: 2rem; }
+      .prompt-directory-content { grid-template-columns: 1fr; gap: .5rem; }
+      .content h1 { margin-top: 2.7rem; }
+      .table-wrap { overflow: visible; border: 0; background: transparent; box-shadow: none; }
+      .table-wrap table, .table-wrap thead, .table-wrap tbody { display: block; width: 100%; min-width: 0; }
+      .table-wrap thead { margin-bottom: .7rem; }
+      .table-wrap thead tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .45rem; }
+      .table-wrap thead th { display: flex; align-items: center; min-height: 3.1rem; padding: .65rem .7rem; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); font-size: .82rem; overflow-wrap: anywhere; }
+      .table-wrap tbody tr { display: block; margin: 0 0 .75rem; padding: .25rem .85rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface) !important; box-shadow: 0 7px 18px rgba(25, 53, 40, .045); }
+      .table-wrap tbody td { display: grid; grid-template-columns: minmax(6.5rem, .85fr) minmax(0, 1.4fr); gap: .75rem; padding: .62rem 0; border-bottom: 1px solid #edf1ee; }
+      .table-wrap tbody td:last-child { border-bottom: 0; }
+      .table-wrap tbody td::before { content: attr(data-label); color: var(--muted); font-size: .82rem; font-weight: 700; }
+      .code-card pre { max-height: 62vh; padding: .85rem; font-size: .82rem; }
+      .code-toolbar { padding: .55rem .65rem; }
+    }
+    @media (max-width: 360px) {
+      .table-wrap thead tr { grid-template-columns: 1fr; }
+      .table-wrap tbody td { grid-template-columns: 1fr; gap: .18rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <span class="hero-mark" aria-hidden="true"></span>
+      <h1>৩০ দিনের Public Experiment System</h1>
+    </header>
+    <nav class="prompt-directory" aria-label="Prompt navigation">
+  <details>
+    <summary><span>প্রম্পট নেভিগেশন</span><span class="prompt-count">22টি prompt</span></summary>
+    <div class="prompt-directory-content">
+      <section aria-label="Daily prompts"><h2>দৈনিক execution prompts</h2><ul><li><a href="#prompt-01">Step 4 — AI দিয়ে প্রথম Experiment নির্বাচন করুন</a></li>
+<li><a href="#prompt-02">এবার AI দিয়ে কী করবেন?</a></li>
+<li><a href="#prompt-03">AI দিয়ে Problem Clarify করুন</a></li>
+<li><a href="#prompt-04">AI দিয়ে Solution-এর প্রথম কাঠামো বানান</a></li>
+<li><a href="#prompt-05">Offer লেখার জন্য AI</a></li>
+<li><a href="#prompt-06">AI দিয়ে Responses বিশ্লেষণ</a></li>
+<li><a href="#prompt-07">AI দিয়ে Week 1 Analysis</a></li>
+<li><a href="#prompt-08">DAY 8 — Offer Message Test</a></li>
+<li><a href="#prompt-09">AI দিয়ে Feedback Analysis</a></li>
+<li><a href="#prompt-10">AI দিয়ে Product Ladder তৈরি করুন</a></li>
+<li><a href="#prompt-11">DAY 23 — Product-in-Public</a></li>
+<li><a href="#prompt-12">DAY 26 — Version 2</a></li>
+<li><a href="#prompt-13">AI দিয়ে Full Data Analysis</a></li></ul></section>
+      <section aria-label="Reusable prompts"><h2>Reusable AI Prompt Library</h2><ul><li><a href="#prompt-14">Prompt 1 — Experiment Idea Generator</a></li>
+<li><a href="#prompt-15">Prompt 2 — Audience Response Analyzer</a></li>
+<li><a href="#prompt-16">Prompt 3 — Problem-to-Solution Designer</a></li>
+<li><a href="#prompt-17">Prompt 4 — Content Episode Generator</a></li>
+<li><a href="#prompt-18">Prompt 5 — Objection Analyzer</a></li>
+<li><a href="#prompt-19">Prompt 6 — Experiment Result Analyzer</a></li>
+<li><a href="#prompt-20">Prompt 7 — Product Ladder Designer</a></li>
+<li><a href="#prompt-21">Prompt 8 — Daily Execution Planner</a></li>
+<li><a href="#prompt-22">Prompt 9 — 30-Day Final Analysis</a></li></ul></section>
+    </div>
+  </details>
+</nav>
+    <main class="content" id="content">
+      <p>এখানে ধরে নেওয়া হচ্ছে, আপনি আজ থেকেই কাজ শুরু করছেন এবং আপনার হাতে শুধু <strong>একটি ফোন বা কম্পিউটার, ChatGPT, একটি নোট/স্প্রেডশিট এবং আপনার প্রকাশের জন্য একটি social platform</strong> আছে।</p>
+<p>সবচেয়ে গুরুত্বপূর্ণ বিষয়টি আগে পরিষ্কার করে নিই:</p>
+<blockquote>
+<p><strong>আপনি ৩০ দিনে ৩০টি আলাদা কাজ করবেন না। আপনি একটি মাত্র public experiment চালাবেন, আর প্রতিদিন তার পরবর্তী ধাপটি সম্পন্ন করবেন।</strong></p>
+</blockquote>
+<p>PDF-এর মূল কাঠামো:</p>
+<p><strong>Goal → Attempt → Problem → Adjustment → Result</strong></p>
+<p>আর একটি experiment থেকে একাধিক content তৈরি করা হবে।</p>
+<hr />
+<h1 id="system">প্রথমে পুরো System-টা বুঝে নিন</h1>
+<p>আপনার ৩০ দিনের কাজটি এই পাঁচটি জিনিসকে একসঙ্গে চালাবে:</p>
+<p><strong>Experiment</strong><br />
+আপনি বাস্তবে কিছু করবেন।</p>
+<p>↓</p>
+<p><strong>Evidence</strong><br />
+কী হল, তার সত্যিকারের ফল সংগ্রহ করবেন।</p>
+<p>↓</p>
+<p><strong>Content</strong><br />
+সেই কাজ ও ফলাফল প্রকাশ করবেন।</p>
+<p>↓</p>
+<p><strong>Audience Interaction</strong><br />
+মানুষের প্রশ্ন, মতামত ও আচরণ সংগ্রহ করবেন।</p>
+<p>↓</p>
+<p><strong>Adjustment / Monetization</strong><br />
+সেই evidence ও audience response অনুযায়ী পরের পদক্ষেপ নেবেন।</p>
+<p>অর্থাৎ:</p>
+<blockquote>
+<p><strong>কাজ → ফল → Content → Audience → Feedback → পরের কাজ</strong></p>
+</blockquote>
+<p>এই loop-টাই ৩০ দিনের শেষে আপনার আসল সম্পদ।</p>
+<hr />
+<h1 id="part-1-day-0-setup">PART 1 — Day 0: কাজ শুরু করার আগে Setup</h1>
+<p>প্রথম দিন experiment শুরু করার আগে প্রায় ৬০–৯০ মিনিট দিয়ে এই setup-টি করে নিন।</p>
+<hr />
+<h2 id="step-1-experiment-folder">Step 1 — একটি আলাদা Experiment Folder তৈরি করুন</h2>
+<p>আপনার ফোন বা কম্পিউটারে একটি folder তৈরি করুন।</p>
+<p>নাম দিন:</p>
+<p><strong>30-Day Public Experiment</strong></p>
+<p>এর মধ্যে পাঁচটি folder রাখুন:</p>
+<div class="code-card text-card" id="snippet-01"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">01_Research
+02_Experiments
+03_Content
+04_Audience_Feedback
+05_Results
+</code></pre></div>
+<p>আপনি Google Drive, OneDrive, অথবা আপনার কম্পিউটারের সাধারণ folder—যেটা সুবিধাজনক সেটাই ব্যবহার করতে পারেন।</p>
+<hr />
+<h1 id="step-2-experiment-dashboard">Step 2 — একটি Experiment Dashboard বানান</h1>
+<p>Google Sheets বা Excel খুলুন।</p>
+<p>প্রথম sheet-এর নাম দিন:</p>
+<p><strong>Experiment Tracker</strong></p>
+<p>এই column-গুলি রাখুন:</p>
+<div class="table-wrap" role="region" aria-label="Table 1" tabindex="0"><table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Goal</th>
+<th>Attempt</th>
+<th>Problem</th>
+<th>Adjustment</th>
+<th>Result</th>
+<th>Audience Response</th>
+<th>Revenue</th>
+</tr>
+</thead>
+</table></div>
+<p>আর একটি দ্বিতীয় sheet তৈরি করুন:</p>
+<p><strong>Audience Feedback</strong></p>
+<p>Column:</p>
+<div class="table-wrap" role="region" aria-label="Table 2" tabindex="0"><table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Person/Source</th>
+<th>Feedback</th>
+<th>Problem Mentioned</th>
+<th>Demand Signal</th>
+<th>Action</th>
+</tr>
+</thead>
+</table></div>
+<p>তৃতীয় sheet:</p>
+<p><strong>Content Tracker</strong></p>
+<div class="table-wrap" role="region" aria-label="Table 3" tabindex="0"><table>
+<thead>
+<tr>
+<th>Day</th>
+<th>Main Content</th>
+<th>Short</th>
+<th>Question</th>
+<th>Result</th>
+<th>Published?</th>
+</tr>
+</thead>
+</table></div>
+<p>এখন থেকে <strong>প্রতিদিন যা করবেন, সেটি সঙ্গে সঙ্গে লিখবেন।</strong></p>
+<p>স্মৃতির ওপর নির্ভর করবেন না।</p>
+<hr />
+<h1 id="step-3-mission">Step 3 — আপনার Mission লিখুন</h1>
+<p>আপনার Notes app-এ বা Dashboard-এর উপরে এই বাক্যটি লিখুন:</p>
+<blockquote>
+<p><strong>আমার ৩০ দিনের Mission:</strong>
+একটি ছোট online-income idea বাস্তবে পরীক্ষা করে দেখা এবং evidence-এর ভিত্তিতে বোঝা—কেউ এর জন্য টাকা দিতে আগ্রহী কি না।</p>
+</blockquote>
+<p>তার নিচে লিখুন:</p>
+<div class="code-card text-card" id="snippet-02"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">Start Date:
+End Date:
+Experiment:
+Target Audience:
+Problem:
+Possible Solution:
+Starting Budget:
+Success Evidence:
+</code></pre></div>
+<p>এখানে <strong>Success Evidence</strong> খুব গুরুত্বপূর্ণ।</p>
+<p>“আমি সফল হব” লিখবেন না।</p>
+<p>লিখবেন:</p>
+<blockquote>
+<p>“অন্তত একজন মানুষ বাস্তবে solution-এর জন্য টাকা দিতে রাজি হন।”</p>
+</blockquote>
+<p>অথবা আপনার experiment অনুযায়ী আরও নির্দিষ্ট evidence ঠিক করুন।</p>
+<hr />
+<h1 id="step-4-ai-experiment">Step 4 — AI দিয়ে প্রথম Experiment নির্বাচন করুন</h1>
+<p>এখানে ChatGPT ব্যবহার করতে পারেন।</p>
+<p>আপনি ChatGPT খুলে আপনার নিজের skill, audience এবং সীমাবদ্ধতা লিখবেন।</p>
+<p>AI-কে সরাসরি business idea বানাতে বলার বদলে <strong>ছোট, বাস্তবে পরীক্ষা করা যায় এমন problem-solution pair</strong> বের করতে বলুন।</p>
+<h3 id="ai">AI-কে বলুন</h3>
+<div class="code-card prompt-card" id="prompt-01"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Step 4 — AI দিয়ে প্রথম Experiment নির্বাচন করুন">Copy Prompt</button></div><pre><code class="language-text">আমি একটি ৩০ দিনের public online-income experiment চালাতে চাই।
+
+আমার লক্ষ্য বড় business তৈরি করা নয়। আমার লক্ষ্য হল ছোট পরিসরে বাস্তবে পরীক্ষা করে দেখা—কোনও নির্দিষ্ট সমস্যার জন্য মানুষ টাকা দিতে আগ্রহী কি না।
+
+আমার তথ্য:
+
+আমার প্রধান skill:
+[আপনার skill]
+
+আমি যে audience-কে বুঝি:
+[আপনার target audience]
+
+এই audience-এর যে সমস্যাগুলি আমি লক্ষ্য করেছি:
+[সমস্যাগুলি]
+
+আমি যে format-এ solution তৈরি করতে পারি:
+[PDF / checklist / template / worksheet / prompt / mini-guide / service / অন্য কিছু]
+
+আমার সময়:
+[প্রতিদিন কত ঘণ্টা]
+
+আমার বাজেট:
+[পরিমাণ]
+
+আমার available tools:
+[tools]
+
+আমার সীমাবদ্ধতা:
+[limitations]
+
+এখন ১০টি সম্ভাব্য ছোট problem-solution experiment তৈরি করুন।
+
+প্রতিটির জন্য দেখান:
+1. Problem
+2. Target person
+3. Smallest useful solution
+4. কীভাবে ৭ দিনের মধ্যে পরীক্ষা করা যায়
+5. কী evidence পাওয়া গেলে demand-এর signal ধরা যাবে
+6. সম্ভাব্য প্রথম paid offer
+7. সবচেয়ে বড় uncertainty
+
+বড়, জটিল বা দীর্ঘমেয়াদি business idea বাদ দিন।
+
+শুধু এমন experiment দিন যেগুলি একজন ব্যক্তি একাই ছোট পরিসরে বাস্তবে test করতে পারেন।
+</code></pre></div>
+<p>AI-এর উত্তর পাওয়ার পরে <strong>সরাসরি প্রথম idea নেবেন না।</strong></p>
+<p>তিনটি shortlist করুন।</p>
+<hr />
+<h1 id="step-5-idea">Step 5 — তিনটি Idea-কে বাস্তবতার বিরুদ্ধে পরীক্ষা করুন</h1>
+<p>প্রতিটি idea-র পাশে এই পাঁচটি প্রশ্নের উত্তর দিন:</p>
+<h3 id="problem">১. Problem কি সত্যিই আছে?</h3>
+<h3 id="problem-1">২. Problem-টি কি যথেষ্ট নির্দিষ্ট?</h3>
+<h3 id="solution">৩. আপনি কি ছোট solution তৈরি করতে পারবেন?</h3>
+<h3 id="section">৪. ৭ দিনের মধ্যে মানুষকে ব্যবহার করাতে পারবেন?</h3>
+<h3 id="section-1">৫. মানুষ টাকা দিতে পারে কি না, সেটা বাস্তবে পরীক্ষা করা সম্ভব?</h3>
+<p>যে idea-র ক্ষেত্রে এগুলির উত্তর পরিষ্কার নয়, সেটি বাদ দিন।</p>
+<hr />
+<h1 id="step-6-idea-lock">Step 6 — একটি Idea Lock করুন</h1>
+<p>এখন একটি মাত্র experiment নির্বাচন করুন।</p>
+<p>আপনার Dashboard-এ লিখুন:</p>
+<blockquote>
+<p><strong>আমার প্রথম Experiment:</strong> [একটি বাক্যে]</p>
+</blockquote>
+<p>তারপর:</p>
+<blockquote>
+<p><strong>আমি কী প্রমাণ করতে চাই:</strong> [একটি measurable evidence]</p>
+</blockquote>
+<p>এখন থেকে ৩০ দিনের মধ্যে নতুন নতুন idea দেখে লাফাবেন না।</p>
+<p><strong>Experiment বদলাবেন কেবল evidence-এর কারণে।</strong></p>
+<hr />
+<h1 id="part-2-week-1">PART 2 — WEEK 1</h1>
+<h1 id="day-1-mission-problem-discovery">DAY 1 — Mission ঘোষণা + Problem Discovery</h1>
+<p>আজ আপনার কাজ হল <strong>Mission শুরু করা</strong>, product বানানো নয়।</p>
+<hr />
+<h2 id="section-2">এখন আপনার ফোনটি নিন</h2>
+<p>Camera খুলুন।</p>
+<p>Perfect lighting দরকার নেই।</p>
+<p>Perfect background দরকার নেই।</p>
+<p>আপনার প্রথম video ৩০–৬০ সেকেন্ডের হতে পারে।</p>
+<p>বলুন:</p>
+<blockquote>
+<p>“আমি আগামী ৩০ দিন একটা ছোট online-income experiment করতে চলেছি। আমি কোনও বড় success story দেখাতে যাচ্ছি না। আমি দেখতে চাই, একটা ছোট সমস্যা নিয়ে কাজ করে বাস্তবে কেউ তার solution-এর জন্য টাকা দিতে চান কি না। কী হয়, আমি পুরো journey-টাই দেখাব।”</p>
+</blockquote>
+<p>তারপর আপনার audience-কে প্রশ্ন করুন:</p>
+<blockquote>
+<p><strong>“আপনার মতে [target audience]-এর কোন ছোট সমস্যার জন্য মানুষ টাকা দিতে রাজি হতে পারে?”</strong></p>
+</blockquote>
+<p>ভিডিওটি publish করুন।</p>
+<hr />
+<h2 id="ai-1">এবার AI দিয়ে কী করবেন?</h2>
+<p>আপনার audience-এর প্রথম response-গুলি জমা হতে শুরু করলে সেগুলি copy করে AI-কে দিন।</p>
+<h3 id="prompt">Prompt</h3>
+<div class="code-card prompt-card" id="prompt-02"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: এবার AI দিয়ে কী করবেন?">Copy Prompt</button></div><pre><code class="language-text">নিচের audience responses বিশ্লেষণ করুন।
+
+আমার experiment:
+[experiment]
+
+আমার target audience:
+[target audience]
+
+Audience responses:
+[responses]
+
+প্রতিটি response থেকে:
+1. উল্লেখ করা problem
+2. problem-এর ধরন
+3. কতটা নির্দিষ্ট
+4. কোনও অর্থনৈতিক demand-এর signal আছে কি না
+5. একই ধরনের problem অন্য কতজন উল্লেখ করেছে
+
+তারপর recurring problem-গুলি আলাদা করুন।
+
+কোনও problem-কে demand আছে বলে নিশ্চিত ঘোষণা করবেন না। শুধু audience responses-এর মধ্যে কী signal দেখা যাচ্ছে তা দেখান।
+
+শেষে সর্বাধিক পুনরাবৃত্ত ৫টি problem দিন।
+</code></pre></div>
+<hr />
+<h1 id="day-2-problem">DAY 2 — Problem নির্বাচন</h1>
+<p>আজ আপনার কাজ:</p>
+<p><strong>Audience-এর কথাকে structured problem-এ পরিণত করা।</strong></p>
+<p>গতকাল যে responses পেয়েছেন সেগুলি খুলুন।</p>
+<p>তিনটি problem shortlist করুন।</p>
+<p>তারপর প্রতিটির জন্য লিখুন:</p>
+<div class="code-card text-card" id="snippet-05"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">Problem:
+কার সমস্যা:
+বর্তমানে কীভাবে সমাধান করে:
+কেন সমস্যা:
+সম্ভাব্য ছোট solution:
+কীভাবে test করব:
+</code></pre></div>
+<hr />
+<h2 id="ai-problem-clarify">AI দিয়ে Problem Clarify করুন</h2>
+<div class="code-card prompt-card" id="prompt-03"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Problem Clarify করুন">Copy Prompt</button></div><pre><code class="language-text">আমি একটি online-income experiment-এর জন্য problem নির্বাচন করছি।
+
+Target audience:
+[target audience]
+
+Audience থেকে পাওয়া raw responses:
+[responses]
+
+এই responses থেকে ৩টি সবচেয়ে পরিষ্কার problem statement তৈরি করুন।
+
+প্রতিটির জন্য লিখুন:
+
+Problem:
+Who has the problem:
+Current situation:
+Desired situation:
+Possible small solution:
+What must be tested:
+What evidence would support demand:
+What evidence would weaken the demand hypothesis:
+
+Audience যা বলেনি, তা fact হিসেবে যোগ করবেন না।
+
+শুধু প্রদত্ত তথ্যের ভিত্তিতে কাজ করুন।
+</code></pre></div>
+<hr />
+<h2 id="audience">এবার Audience-কে সিদ্ধান্তের অংশ করুন</h2>
+<p>আপনার তিনটি problem নিয়ে একটি poll দিন:</p>
+<blockquote>
+<p><strong>“আমি আগামী experiment-এর জন্য কোন problem test করব?”</strong></p>
+</blockquote>
+<p>A / B / C</p>
+<p>আজ কোনও product বিক্রি করবেন না।</p>
+<hr />
+<h1 id="day-3-smallest-useful-solution">DAY 3 — Smallest Useful Solution তৈরি</h1>
+<p>আজ আপনার কাজ <strong>বড় product তৈরি করা নয়।</strong></p>
+<p>আপনি শুধু এমন একটি minimum useful solution বানাবেন, যা একজন মানুষ ব্যবহার করে বুঝতে পারবেন:</p>
+<blockquote>
+<p>“এটি আমার সমস্যায় সত্যিই সাহায্য করছে কি না।”</p>
+</blockquote>
+<p>এটি হতে পারে:</p>
+<ul>
+<li>checklist</li>
+<li>template</li>
+<li>worksheet</li>
+<li>prompt</li>
+<li>ছোট guide</li>
+<li>diagnostic tool</li>
+</ul>
+<hr />
+<h2 id="ai-solution">AI দিয়ে Solution-এর প্রথম কাঠামো বানান</h2>
+<div class="code-card prompt-card" id="prompt-04"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Solution-এর প্রথম কাঠামো বানান">Copy Prompt</button></div><pre><code class="language-text">আমি একটি ছোট paid/free solution তৈরি করছি।
+
+Target audience:
+[target audience]
+
+Problem:
+[problem]
+
+Desired outcome:
+[desired outcome]
+
+Solution format:
+[checklist / template / worksheet / prompt / guide / অন্য কিছু]
+
+ব্যবহারকারী কত সময়ের মধ্যে এটি ব্যবহার করতে পারবে:
+[time]
+
+আমার solution-এর লক্ষ্য:
+[goal]
+
+এখন একটি Minimum Useful Version-এর structure তৈরি করুন।
+
+শুধু সেই অংশগুলি রাখুন যা ব্যবহারকারীকে [desired outcome]-এর দিকে এগোতে সাহায্য করে।
+
+অপ্রয়োজনীয় bonus, অতিরিক্ত theory এবং decorative content বাদ দিন।
+
+Structure দিন:
+1.
+2.
+3.
+4.
+5.
+
+প্রতিটি অংশের উদ্দেশ্য এক লাইনে লিখুন।
+</code></pre></div>
+<p>তারপর AI-এর structure দেখে নিজে finalise করুন।</p>
+<hr />
+<h1 id="day-4-mvp">DAY 4 — MVP প্রকাশ</h1>
+<p>আজ solution-এর প্রথম version ব্যবহারকারীদের সামনে দিন।</p>
+<p>আপনার content হবে:</p>
+<p><strong>Problem → আমি কী তৈরি করেছি → কীভাবে ব্যবহার করবেন</strong></p>
+<p>ভিডিওতে solution-এর বাস্তব অংশ দেখান।</p>
+<p>তারপর CTA দিন:</p>
+<blockquote>
+<p><strong>“আপনি এটি ব্যবহার করে দেখতে চাইলে ‘চাই’ লিখুন।”</strong></p>
+</blockquote>
+<p>এখানে আপনি একটি গুরুত্বপূর্ণ measurement শুরু করছেন:</p>
+<p><strong>Views নয় → কতজন actual interest দেখালেন।</strong></p>
+<hr />
+<h1 id="day-5-paid-test">DAY 5 — প্রথম Paid Test</h1>
+<p>আজ প্রথমবার টাকা চাওয়ার সময়।</p>
+<p>আপনার offer খুব ছোট রাখুন।</p>
+<p>উদাহরণ:</p>
+<p><strong>Free sample</strong></p>
+<p>↓</p>
+<p><strong>Complete version — ₹99</strong></p>
+<p>আপনার নিজের পরিস্থিতি অনুযায়ী দাম নির্ধারণ করুন।</p>
+<p>এখানে লক্ষ্য বড় revenue নয়।</p>
+<p>লক্ষ্য:</p>
+<blockquote>
+<p><strong>মানুষ কি বাস্তবে টাকা দিতে রাজি?</strong></p>
+</blockquote>
+<hr />
+<h2 id="offer-ai">Offer লেখার জন্য AI</h2>
+<div class="code-card prompt-card" id="prompt-05"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Offer লেখার জন্য AI">Copy Prompt</button></div><pre><code class="language-text">আমার একটি ছোট paid solution আছে।
+
+Target audience:
+[target audience]
+
+Problem:
+[problem]
+
+Solution:
+[solution]
+
+Price:
+[price]
+
+যে outcome-এর দিকে solution সাহায্য করে:
+[outcome]
+
+এখন একটি সংক্ষিপ্ত, পরিষ্কার offer তৈরি করুন।
+
+Structure:
+1. Problem
+2. What the buyer gets
+3. How it helps
+4. Who it is for
+5. Price
+6. Clear call to action
+
+অতিরঞ্জিত promise, guaranteed result বা ভুয়ো urgency ব্যবহার করবেন না।
+
+ভাষা হবে সহজ, সরাসরি এবং বিশ্বাসযোগ্য।
+</code></pre></div>
+<hr />
+<h1 id="day-6">DAY 6 — কেন মানুষ কিনল না?</h1>
+<p>আজ আপনার কাজ <strong>বিক্রি বাড়ানো নয়।</strong></p>
+<p>প্রথমে বুঝুন:</p>
+<blockquote>
+<p><strong>কেন মানুষ কিনছে না?</strong></p>
+</blockquote>
+<p>যাঁরা আগ্রহ দেখিয়েছেন কিন্তু কেনেননি, তাঁদের একটি ছোট প্রশ্ন পাঠান:</p>
+<blockquote>
+<p>“একটি প্রশ্ন—আপনি এটি কেন নেননি? আপনার কাছে সবচেয়ে বড় বাধাটা কী মনে হয়েছে?”</p>
+</blockquote>
+<p>যদি কেউ উত্তর না দেন, সেটিও record করুন।</p>
+<hr />
+<h2 id="ai-responses">AI দিয়ে Responses বিশ্লেষণ</h2>
+<div class="code-card prompt-card" id="prompt-06"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Responses বিশ্লেষণ">Copy Prompt</button></div><pre><code class="language-text">আমি একটি ছোট paid offer test করেছি।
+
+Offer:
+[offer]
+
+Price:
+[price]
+
+Target audience:
+[target audience]
+
+মানুষের responses:
+[responses]
+
+এখন responses-গুলি বিশ্লেষণ করে আলাদা করুন:
+
+1. Problem-related objection
+2. Offer clarity objection
+3. Price objection
+4. Trust objection
+5. Format/delivery objection
+6. No-interest signal
+7. অন্যান্য
+
+প্রতিটি category-র নিচে actual response-এর অর্থ সংক্ষেপে লিখুন।
+
+তারপর দেখান:
+কোন বিষয়গুলি সরাসরি audience বলেছে এবং কোনগুলি শুধু সম্ভাব্য interpretation।
+
+কোনও কারণকে নিশ্চিত কারণ হিসেবে ধরে নেবেন না যদি audience তা স্পষ্টভাবে না বলে।
+</code></pre></div>
+<hr />
+<h1 id="day-7-result">DAY 7 — প্রথম Result</h1>
+<p>আজ নতুন experiment করবেন না।</p>
+<p>আপনার Sheet খুলুন।</p>
+<p>এই পাঁচটি সংখ্যা লিখুন:</p>
+<div class="code-card text-card" id="snippet-10"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">Content views:
+People who responded:
+People who tried:
+People who bought:
+Revenue:
+</code></pre></div>
+<p>তারপর লিখুন:</p>
+<p><strong>আমি যা ভেবেছিলাম → বাস্তবে যা হল</strong></p>
+<hr />
+<h2 id="ai-week-1-analysis">AI দিয়ে Week 1 Analysis</h2>
+<div class="code-card prompt-card" id="prompt-07"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Week 1 Analysis">Copy Prompt</button></div><pre><code class="language-text">আমার ৭ দিনের experiment-এর data নিচে দিলাম।
+
+Experiment:
+[experiment]
+
+Goal:
+[goal]
+
+Content views:
+[number]
+
+Responses:
+[number]
+
+Trials:
+[number]
+
+Buyers:
+[number]
+
+Revenue:
+[number]
+
+Audience feedback:
+[feedback]
+
+আমি প্রথমে যে hypothesis করেছিলাম:
+[hypothesis]
+
+এখন:
+
+1. কী ঘটেছে তা সংক্ষেপে বলুন।
+2. Hypothesis-এর কোন অংশ support পেয়েছে?
+3. কোন অংশ support পায়নি?
+4. কোন প্রশ্নের উত্তর এখনও পাওয়া যায়নি?
+5. পরের সপ্তাহে কোন একটি variable পরিবর্তন করে test করা যায়?
+6. কোন বিষয় এখনই পরিবর্তন করা উচিত নয়?
+
+শুধু data-supported conclusion দিন।
+</code></pre></div>
+<hr />
+<h1 id="part-3-week-2-experiment-improve">PART 3 — WEEK 2: একই Experiment Improve করুন</h1>
+<p>এখানে একটি discipline অত্যন্ত গুরুত্বপূর্ণ:</p>
+<blockquote>
+<p><strong>নতুন idea-তে চলে যাবেন না।</strong></p>
+</blockquote>
+<p>Result থেকে পরবর্তী episode তৈরি করুন।</p>
+<hr />
+<h1 id="day-8-offer-message-test">DAY 8 — Offer Message Test</h1>
+<p>আপনার existing offer-এর মূল message বদলান।</p>
+<p>একটি version problem-focused করুন।</p>
+<p>অন্যটি outcome-focused করুন।</p>
+<p>তারপর দুটির মধ্যে audience response দেখুন।</p>
+<p>AI দিয়ে দুটি version লিখিয়ে নিতে পারেন।</p>
+<div class="code-card prompt-card" id="prompt-08"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: DAY 8 — Offer Message Test">Copy Prompt</button></div><pre><code class="language-text">আমার offer:
+
+Target audience:
+[target audience]
+
+Problem:
+[problem]
+
+Solution:
+[solution]
+
+Outcome:
+[outcome]
+
+Price:
+[price]
+
+এখন একই offer-এর দুটি message তৈরি করুন।
+
+Version A:
+Problem-focused
+
+Version B:
+Outcome-focused
+
+দুটির তথ্য একই রাখুন।
+
+কোনও নতুন feature বা claim যোগ করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="day-9-solution-improve">DAY 9 — Solution Improve করুন</h1>
+<p>গত ৮ দিনের feedback দেখে <strong>একটি মাত্র পরিবর্তন</strong> করুন।</p>
+<p>যেমন:</p>
+<ul>
+<li>একটি section বাদ দেওয়া</li>
+<li>একটি example যোগ করা</li>
+<li>ব্যবহার সহজ করা</li>
+<li>worksheet-কে আরও পরিষ্কার করা</li>
+</ul>
+<p>একসঙ্গে পাঁচটি পরিবর্তন করবেন না।</p>
+<p>কারণ তাহলে কোন পরিবর্তনে ফল বদলেছে, সেটা বোঝা কঠিন হবে।</p>
+<hr />
+<h1 id="day-10-user-test">DAY 10 — User Test</h1>
+<p>৫–১০ জনকে solution ব্যবহার করতে দিন।</p>
+<p>তাঁদের বলুন:</p>
+<blockquote>
+<p>“আপনি শুধু ব্যবহার করুন। কোথায় আটকে যাচ্ছেন, সেটা আমাকে বলুন।”</p>
+</blockquote>
+<p>এখানে আপনি নিজে explain করে সাহায্য করতে থাকবেন না।</p>
+<p>দেখুন তাঁরা কোথায় আটকে যাচ্ছেন।</p>
+<hr />
+<h2 id="ai-feedback-analysis">AI দিয়ে Feedback Analysis</h2>
+<div class="code-card prompt-card" id="prompt-09"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Feedback Analysis">Copy Prompt</button></div><pre><code class="language-text">আমার solution:
+[solution]
+
+ব্যবহারকারীদের feedback:
+[feedback]
+
+প্রতিটি feedback থেকে:
+
+1. ব্যবহারকারীর সমস্যা
+2. solution-এর কোন অংশের সঙ্গে সম্পর্কিত
+3. ব্যবহারকারীর নিজের ভাষায় মূল difficulty
+4. কী পরিবর্তন প্রয়োজন হতে পারে
+5. পরিবর্তনটি কতটা জরুরি
+
+Priority দিন:
+P1 = ব্যবহার করতে বাধা দেয়
+P2 = ব্যবহার কঠিন করে
+P3 = উন্নতি করলে ভালো
+
+শেষে শুধু P1 সমস্যাগুলির ভিত্তিতে পরবর্তী পরিবর্তনের তালিকা দিন।
+</code></pre></div>
+<hr />
+<h1 id="day-11-price-test">DAY 11 — Price Test</h1>
+<p>এবার price পরিবর্তন করে test করুন।</p>
+<p>একই product রাখুন।</p>
+<p>শুধু price পরিবর্তন করুন।</p>
+<p>এতে আপনি একটি জিনিস আলাদা করে দেখছেন:</p>
+<p><strong>Product problem বনাম Price problem</strong></p>
+<hr />
+<h1 id="day-12-delivery-format-test">DAY 12 — Delivery Format Test</h1>
+<p>এবার solution-এর format test করুন।</p>
+<p>যেমন:</p>
+<p><strong>PDF বনাম Template বনাম Prompt</strong></p>
+<p>Audience-কে দেখান:</p>
+<blockquote>
+<p>“একই solution—কোন format আপনার কাছে বেশি useful?”</p>
+</blockquote>
+<p>তারপর vote নিন।</p>
+<hr />
+<h1 id="day-13-audience-suggestion">DAY 13 — Audience Suggestion বাস্তবে ব্যবহার করুন</h1>
+<p>আজ audience-এর একটি suggestion নিন।</p>
+<p>Content শুরু করুন:</p>
+<blockquote>
+<p><strong>“আপনারা এই সমস্যাটা বলেছিলেন। আজ আমি সেটাই test করছি।”</strong></p>
+</blockquote>
+<p>তারপর suggestion অনুযায়ী পরিবর্তন করুন।</p>
+<hr />
+<h1 id="day-14-result">DAY 14 — দ্বিতীয় Result</h1>
+<p>আবার একই metrics তুলুন:</p>
+<div class="code-card text-card" id="snippet-14"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">Reach
+Interest
+Trials
+Buyers
+Revenue
+Feedback
+</code></pre></div>
+<p>তারপর Day 1-এর সঙ্গে Day 14 তুলনা করুন।</p>
+<p>এখানে সিদ্ধান্ত নেওয়ার আগে evidence লিখুন:</p>
+<div class="code-card text-card" id="snippet-15"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">What improved:
+What did not improve:
+What remains uncertain:
+What should be tested next:
+</code></pre></div>
+<hr />
+<h1 id="part-4-week-3-audience-experiment">PART 4 — WEEK 3: Audience-কে Experiment-এর অংশ করুন</h1>
+<p>এখন আপনি শুধু audience-এর জন্য content বানাবেন না।</p>
+<p><strong>Audience-কে পরবর্তী decision-এর input হিসেবে ব্যবহার করবেন।</strong></p>
+<hr />
+<h1 id="day-15-next-experiment">DAY 15 — তিনটি Next Experiment দিন</h1>
+<p>Audience-কে তিনটি option দিন:</p>
+<p><strong>A — Existing solution improve</strong></p>
+<p><strong>B — নতুন problem test</strong></p>
+<p><strong>C — অন্য offer test</strong></p>
+<p>বলুন:</p>
+<blockquote>
+<p>“পরের experiment কোনটা হবে, সেটা আপনারা ঠিক করুন।”</p>
+</blockquote>
+<p>Poll চালান।</p>
+<hr />
+<h1 id="day-16-audience-experiment">DAY 16 — Audience-এর নির্বাচিত Experiment চালান</h1>
+<p>আজ poll result দেখুন।</p>
+<p>যেটিতে সবচেয়ে বেশি audience response এসেছে, সেটিকে <strong>আপনার experiment hypothesis</strong> হিসেবে নিন।</p>
+<p>তারপর camera চালু করে বলুন:</p>
+<blockquote>
+<p>“গতকাল আপনারা এই option বেছে নিয়েছেন। আজ আমি সেটাই test করছি।”</p>
+</blockquote>
+<p>এটাই আপনার next episode।</p>
+<hr />
+<h1 id="day-17-experiment">DAY 17 — Experiment চালান</h1>
+<p>আজ মূল কাজ content নয়।</p>
+<p><strong>কাজটাই content।</strong></p>
+<p>আপনি যা করছেন তা record করুন:</p>
+<ul>
+<li>setup</li>
+<li>attempt</li>
+<li>problem</li>
+<li>intermediate result</li>
+</ul>
+<p>কোনও result তৈরি না হলে result বানাবেন না।</p>
+<hr />
+<h1 id="day-18-problem">DAY 18 — Problem প্রকাশ করুন</h1>
+<p>যদি কোথাও আটকে যান, সেটাই আজকের content।</p>
+<p>বলুন:</p>
+<blockquote>
+<p>“এখানে আমার experiment আটকে গেছে। আমি এখন দুটো option দেখছি।”</p>
+</blockquote>
+<p>তারপর audience-কে জিজ্ঞাসা করুন:</p>
+<blockquote>
+<p><strong>“আপনি হলে কোনটা test করতেন?”</strong></p>
+</blockquote>
+<hr />
+<h1 id="day-19-audience-suggestion-test">DAY 19 — Audience Suggestion Test</h1>
+<p>গতকালের responses খুলুন।</p>
+<p>একটি suggestion নির্বাচন করুন।</p>
+<p>তারপর বাস্তবে প্রয়োগ করুন।</p>
+<p>Content structure:</p>
+<p><strong>Suggestion → Action → Result</strong></p>
+<hr />
+<h1 id="day-20-product-ladder">DAY 20 — Product Ladder</h1>
+<p>এখন আপনার product-কে তিন স্তরে ভাবুন:</p>
+<div class="code-card text-card" id="snippet-16"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">FREE
+↓
+ছোট Paid Solution
+↓
+Complete Solution
+</code></pre></div>
+<p>আপনার ক্ষেত্রে এখনই তিনটি product বানাবেন না।</p>
+<p>শুধু কাঠামো তৈরি করুন।</p>
+<hr />
+<h2 id="ai-product-ladder">AI দিয়ে Product Ladder তৈরি করুন</h2>
+<div class="code-card prompt-card" id="prompt-10"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Product Ladder তৈরি করুন">Copy Prompt</button></div><pre><code class="language-text">আমার target audience:
+[target audience]
+
+মূল problem:
+[problem]
+
+আমার existing free content:
+[free content]
+
+আমার বর্তমান ছোট paid solution:
+[paid solution]
+
+আমি যে outcome-এর দিকে সাহায্য করছি:
+[outcome]
+
+এখন একটি simple product ladder তৈরি করুন:
+
+Level 1: Free
+Level 2: Low-priced paid solution
+Level 3: More complete paid solution
+
+প্রতিটি level-এর জন্য লিখুন:
+1. উদ্দেশ্য
+2. কী থাকবে
+3. কী থাকবে না
+4. ব্যবহারকারীর জন্য সম্ভাব্য next step
+
+অপ্রয়োজনীয় product বা artificial upsell যোগ করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="day-21-demand-test">DAY 21 — Demand Test</h1>
+<p>আজ product তৈরি করবেন না।</p>
+<p>শুধু demand test করুন।</p>
+<p>Audience-কে জিজ্ঞাসা করুন:</p>
+<blockquote>
+<p><strong>“আমি যদি এই সমস্যার সম্পূর্ণ solution তৈরি করি, কোন অংশটি আপনার সবচেয়ে বেশি প্রয়োজন?”</strong></p>
+</blockquote>
+<p>এখানে আপনি <strong>idea নয়, demand language</strong> সংগ্রহ করছেন।</p>
+<p>মানুষ যে ভাষায় problem বলছে, সেটি record করুন।</p>
+<hr />
+<h1 id="part-5-week-4-monetization-system">PART 5 — WEEK 4: Monetization System</h1>
+<p>এখন পর্যন্ত আপনি product বানানোর চেয়ে বেশি গুরুত্বপূর্ণ কাজ করেছেন:</p>
+<p><strong>Demand সম্পর্কে evidence সংগ্রহ করেছেন।</strong></p>
+<p>এখন সেটিকে একটি ছোট paid product-এ রূপ দিন।</p>
+<hr />
+<h1 id="day-22-paid-product">DAY 22 — ছোট Paid Product তৈরি করুন</h1>
+<p>আপনার product হবে:</p>
+<p><strong>ছোট + ব্যবহারযোগ্য + নির্দিষ্ট problem-focused</strong></p>
+<p>উদাহরণ:</p>
+<p><strong>Online Income Experiment Kit</strong></p>
+<p>এর মধ্যে থাকতে পারে:</p>
+<ul>
+<li>Problem Finder</li>
+<li>Skill-to-Problem Worksheet</li>
+<li>Experiment Planner</li>
+<li>Result Tracker</li>
+<li>Next-Step Checklist</li>
+</ul>
+<p>কিন্তু এগুলি কেবল উদাহরণ।</p>
+<p>আপনার actual product হবে আপনার audience-এর actual demand অনুযায়ী।</p>
+<hr />
+<h1 id="day-23-product-in-public">DAY 23 — Product-in-Public</h1>
+<p>আজ product-এর construction process দেখান।</p>
+<p>Camera চালু করুন।</p>
+<p>বলুন:</p>
+<blockquote>
+<p>“আপনারা যে সমস্যাটা সবচেয়ে বেশি বলেছেন, সেটাকে সমাধান করার জন্য আমি এই ছোট product তৈরি করছি।”</p>
+</blockquote>
+<p>তারপর screen record করুন।</p>
+<p>AI দিয়ে content script তৈরি করতে পারেন।</p>
+<div class="code-card prompt-card" id="prompt-11"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: DAY 23 — Product-in-Public">Copy Prompt</button></div><pre><code class="language-text">আমার product তৈরির তথ্য:
+
+Target audience:
+[target audience]
+
+Problem:
+[problem]
+
+Product:
+[product]
+
+Audience-এর সবচেয়ে গুরুত্বপূর্ণ feedback:
+[feedback]
+
+আজ আমি যে পরিবর্তন করছি:
+[change]
+
+এখন ৬০–৯০ সেকেন্ডের একটি natural Bengali video script লিখুন।
+
+Structure:
+Hook → Problem → What I changed → Why → Next step
+
+ভাষা হবে conversational, সরাসরি এবং অতিরঞ্জনহীন।
+</code></pre></div>
+<hr />
+<h1 id="day-24-sales-message-test">DAY 24 — Sales Message Test</h1>
+<p>আজ product-এর presentation test করুন।</p>
+<p><strong>Version A:</strong></p>
+<p>Problem-first</p>
+<p><strong>Version B:</strong></p>
+<p>Outcome-first</p>
+<p>দুটির response আলাদা করে record করুন।</p>
+<p>এখানে শুধু “কোনটা বেশি ভালো” বলবেন না।</p>
+<p>দেখুন:</p>
+<div class="code-card text-card" id="snippet-19"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">Views
+Clicks / enquiries
+Questions
+Purchases
+</code></pre></div>
+<hr />
+<h1 id="day-25-buyer-feedback">DAY 25 — Buyer Feedback</h1>
+<p>যাঁরা কিনেছেন, তাঁদের জিজ্ঞাসা করুন:</p>
+<blockquote>
+<p>“কোন অংশটি সবচেয়ে কাজে লেগেছে?”</p>
+</blockquote>
+<blockquote>
+<p>“কোথায় আরও পরিষ্কার হওয়া দরকার?”</p>
+</blockquote>
+<blockquote>
+<p>“আপনি আগে কী সমস্যায় ছিলেন?”</p>
+</blockquote>
+<blockquote>
+<p>“এটি ব্যবহার করার পরে কী পরিবর্তন হয়েছে?”</p>
+</blockquote>
+<p>শেষ প্রশ্নের উত্তরকে guarantee বা universal result হিসেবে ব্যবহার করবেন না। এটি শুধু buyer feedback হিসেবে record করবেন।</p>
+<hr />
+<h1 id="day-26-version-2">DAY 26 — Version 2</h1>
+<p>এখন buyer feedback থেকে product-এর দ্বিতীয় version তৈরি করুন।</p>
+<p>আপনার AI prompt:</p>
+<div class="code-card prompt-card" id="prompt-12"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: DAY 26 — Version 2">Copy Prompt</button></div><pre><code class="language-text">আমার product-এর Version 1:
+
+[product details]
+
+Buyer feedback:
+[feedback]
+
+আমি চাই Version 2-তে শুধু evidence-supported পরিবর্তন করতে।
+
+Feedback বিশ্লেষণ করে দেখান:
+
+1. কোন বিষয় একাধিক buyer বলেছেন
+2. কোন সমস্যা সবচেয়ে গুরুত্বপূর্ণ
+3. কোন পরিবর্তন product-এর usability বাড়াবে
+4. কোন suggestion এখনই implement করার প্রয়োজন নেই
+5. Version 2-এর final change list
+
+প্রতিটি change-এর পাশে কারণ লিখুন।
+
+কোনও নতুন feature শুধু product বড় করার জন্য যোগ করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="day-27-audience-challenge">DAY 27 — Audience Challenge</h1>
+<p>এবার audience-কে একটি ছোট action দিন।</p>
+<p>উদাহরণ:</p>
+<blockquote>
+<p>“আগামী ২৪ ঘণ্টায় আপনার একটি skill এবং একটি real problem লিখে বের করুন, যেটি আপনি test করতে পারেন।”</p>
+</blockquote>
+<p>তারপর বলুন:</p>
+<blockquote>
+<p>“যাঁরা করেছেন, comment-এ শুধু problem এবং skill লিখুন।”</p>
+</blockquote>
+<p>এতে আপনি audience-এর real problems-এর একটি নতুন data set পাবেন।</p>
+<hr />
+<h1 id="day-28-revenue-review">DAY 28 — Revenue Review</h1>
+<p>আজ কোনও নতুন experiment নয়।</p>
+<p>আপনার spreadsheet খুলুন।</p>
+<p>এই table তৈরি করুন:</p>
+<div class="table-wrap" role="region" aria-label="Table 4" tabindex="0"><table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align: right;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="Metric">Total experiments</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Total content</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Total responses</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Total trials</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Total buyers</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Total revenue</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Total expenses</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+<tr>
+<td data-label="Metric">Net result</td>
+<td style="text-align: right;" data-label="Metric"></td>
+</tr>
+</tbody>
+</table></div>
+<p>তারপর লিখুন:</p>
+<p><strong>কী কাজ করেছে?</strong></p>
+<p><strong>কী কাজ করেনি?</strong></p>
+<p><strong>কী এখনও জানা যায়নি?</strong></p>
+<hr />
+<h2 id="ai-full-data-analysis">AI দিয়ে Full Data Analysis</h2>
+<div class="code-card prompt-card" id="prompt-13"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: AI দিয়ে Full Data Analysis">Copy Prompt</button></div><pre><code class="language-text">এটি আমার ২৮ দিনের public experiment-এর data।
+
+Mission:
+[mission]
+
+Initial hypothesis:
+[hypothesis]
+
+Experiment data:
+[data]
+
+Audience feedback:
+[feedback]
+
+Revenue:
+[revenue]
+
+Expenses:
+[expenses]
+
+এখন একটি evidence-based analysis তৈরি করুন।
+
+আলাদা করে দেখান:
+
+1. Initial hypothesis
+2. What the experiment actually tested
+3. Observed results
+4. Evidence supporting the hypothesis
+5. Evidence against the hypothesis
+6. Unknowns
+7. Audience demand signals
+8. Product signals
+9. Monetization signals
+10. Next experiment recommendation
+
+Observed fact এবং interpretation আলাদা করে লিখুন।
+
+যে বিষয়ে data যথেষ্ট নয়, সেখানে স্পষ্টভাবে “যথেষ্ট data নেই” লিখুন।
+</code></pre></div>
+<hr />
+<h1 id="day-29-mission">DAY 29 — পরবর্তী Mission</h1>
+<p>এখন audience-কে তিনটি <strong>বাস্তব পরবর্তী option</strong> দিন।</p>
+<p>যেমন:</p>
+<p><strong>A — একই product আরও উন্নত করা</strong></p>
+<p><strong>B — একই audience-এর দ্বিতীয় problem test করা</strong></p>
+<p><strong>C — বর্তমান solution-এর higher-value version test করা</strong></p>
+<p>Audience vote নিন।</p>
+<p>কিন্তু একটি গুরুত্বপূর্ণ বিষয়:</p>
+<p><strong>Audience vote-কে final truth হিসেবে ধরবেন না।</strong></p>
+<p>এটি শুধু next experiment নির্বাচন করার একটি input।</p>
+<hr />
+<h1 id="day-30-final-episode">DAY 30 — Final Episode</h1>
+<p>আজ ৩০ দিনের পুরো journey প্রকাশ করুন।</p>
+<p>আপনার video বা long-form content-এর structure হবে:</p>
+<h3 id="section-3">১. আমি কোথা থেকে শুরু করেছিলাম</h3>
+<h3 id="hypothesis">২. আমার hypothesis কী ছিল</h3>
+<h3 id="experiment">৩. প্রথম experiment কী ছিল</h3>
+<h3 id="section-4">৪. কী সমস্যা হল</h3>
+<h3 id="section-5">৫. কী পরিবর্তন করলাম</h3>
+<h3 id="result">৬. কী result পেলাম</h3>
+<h3 id="audience-1">৭. Audience কী বলল</h3>
+<h3 id="section-6">৮. কী বিক্রি হল</h3>
+<h3 id="section-7">৯. কী বিক্রি হল না</h3>
+<h3 id="section-8">১০. আমি কী শিখলাম</h3>
+<h3 id="section-9">১১. এখনও কী জানা যায়নি</h3>
+<h3 id="mission">১২. পরের Mission কী</h3>
+<p>এটাই আপনার <strong>Season 1 Final Episode</strong>।</p>
+<hr />
+<h1 id="live-execution-loop">এখন সবচেয়ে গুরুত্বপূর্ণ: প্রতিদিনের Live Execution Loop</h1>
+<p>আপনি যাতে প্রতিদিন বসে “এখন কী করব?” ভাবতে না হয়, এই routine-টি ব্যবহার করুন।</p>
+<h2 id="section-10">প্রতিদিন সকালে — ১৫ মিনিট</h2>
+<p>ফোনে আপনার <strong>Experiment Tracker</strong> খুলুন।</p>
+<p>গতকালের Result দেখুন।</p>
+<p>তারপর লিখুন:</p>
+<blockquote>
+<p><strong>আজকের Goal কী?</strong></p>
+</blockquote>
+<p>তার নিচে:</p>
+<blockquote>
+<p><strong>আজ আমি কী Attempt করব?</strong></p>
+</blockquote>
+<hr />
+<h2 id="section-11">তারপর — ৩০–৯০ মিনিট</h2>
+<p>শুধু আজকের experiment করুন।</p>
+<p>Content বানানোর জন্য আলাদা ঘটনা তৈরি করবেন না।</p>
+<p><strong>যা করছেন, সেটাই record করুন।</strong></p>
+<hr />
+<h2 id="section-12">তারপর — ১৫ মিনিট</h2>
+<p>লিখুন:</p>
+<div class="code-card text-card" id="snippet-22"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">What happened?
+What problem appeared?
+What changed?
+What result appeared?
+</code></pre></div>
+<hr />
+<h2 id="section-13">তারপর — ২০–৩০ মিনিট</h2>
+<p>AI দিয়ে content structure তৈরি করুন।</p>
+<hr />
+<h2 id="section-14">তারপর — ১৫–৩০ মিনিট</h2>
+<p>নিজের ভাষায় final content বানান।</p>
+<p>AI-এর লেখা হুবহু পড়ে শোনাবেন না।</p>
+<hr />
+<h2 id="publish">তারপর — Publish</h2>
+<p>একটি main episode প্রকাশ করুন।</p>
+<hr />
+<h2 id="audience-question">তারপর — Audience Question</h2>
+<p>একটি মাত্র পরিষ্কার প্রশ্ন করুন।</p>
+<p>যেমন:</p>
+<blockquote>
+<p>“আপনি হলে পরের experiment-এ কী পরিবর্তন করতেন?”</p>
+</blockquote>
+<hr />
+<h2 id="section-15">রাতে — ১০ মিনিট</h2>
+<p>সব response tracker-এ লিখুন।</p>
+<p>এটাই পরের দিনের input।</p>
+<hr />
+<h1 id="daily-operating-sheet">আপনার Daily Operating Sheet</h1>
+<p>প্রতিদিন এই ছোট template-টি ব্যবহার করুন:</p>
+<div class="code-card text-card" id="snippet-23"><div class="code-toolbar"><span class="code-kind">TEXT</span><button class="copy-button" type="button" aria-label="Copy text block">Copy Text</button></div><pre><code class="language-text">DAY:
+
+TODAY'S GOAL:
+আজ আমি কী জানতে/প্রমাণ করতে চাই?
+
+TODAY'S ATTEMPT:
+আমি ঠিক কী করব?
+
+PROBLEM:
+কী সমস্যা হল?
+
+ADJUSTMENT:
+আমি কী পরিবর্তন করলাম?
+
+RESULT:
+বাস্তবে কী হল?
+
+AUDIENCE RESPONSE:
+মানুষ কী বলল/করল?
+
+MONETIZATION:
+আজ কোনও paid action হল কি?
+
+NEXT QUESTION:
+এখন আমার সবচেয়ে গুরুত্বপূর্ণ প্রশ্ন কী?
+</code></pre></div>
+<p>এই শেষ লাইনটি বিশেষ গুরুত্বপূর্ণ:</p>
+<blockquote>
+<p><strong>NEXT QUESTION</strong></p>
+</blockquote>
+<p>কারণ আজকের Result থেকেই আগামীকালের Goal তৈরি হবে।</p>
+<hr />
+<h1 id="ai-2">AI কোথায় ব্যবহার করবেন, আর কোথায় করবেন না</h1>
+<p>এটি খুব পরিষ্কারভাবে আলাদা রাখুন।</p>
+<h3 id="ai-3">AI ব্যবহার করুন:</h3>
+<ul>
+<li>problem response বিশ্লেষণে</li>
+<li>idea organise করতে</li>
+<li>solution structure তৈরি করতে</li>
+<li>content outline তৈরি করতে</li>
+<li>video script-এর draft করতে</li>
+<li>audience feedback categorise করতে</li>
+<li>offer-এর wording তৈরি করতে</li>
+<li>product ladder structure করতে</li>
+<li>experiment data analyse করতে</li>
+<li>final report তৈরি করতে</li>
+</ul>
+<h3 id="ai-4">AI-এর উপর নির্ভর করবেন না:</h3>
+<ul>
+<li>মানুষের সত্যিকারের সমস্যা আছে কি না</li>
+<li>মানুষ সত্যিই টাকা দেবে কি না</li>
+<li>solution ব্যবহার করে কী অনুভব করছে</li>
+<li>actual sale</li>
+<li>actual audience response</li>
+<li>actual experiment result</li>
+</ul>
+<p><strong>AI hypothesis তৈরি করতে পারে।</strong></p>
+<p><strong>বাস্তব মানুষ evidence দেবে।</strong></p>
+<p>এটাই এই পুরো Method-এর সবচেয়ে গুরুত্বপূর্ণ operating principle।</p>
+<hr />
+<h1 id="decision-tree">৩০ দিনের শেষে আপনার Decision Tree</h1>
+<p>Day 30-এ তিন ধরনের পরিস্থিতি হতে পারে।</p>
+<h3 id="situation-a">Situation A — মানুষ আগ্রহ দেখিয়েছে এবং টাকা দিয়েছে</h3>
+<p>তাহলে একই problem নিয়ে আরও controlled experiment চালান।</p>
+<h3 id="situation-b-problem">Situation B — মানুষ problem স্বীকার করেছে, কিন্তু টাকা দেয়নি</h3>
+<p>তাহলে পরীক্ষা করুন:</p>
+<p><strong>Problem → Offer → Price → Trust → Format</strong></p>
+<p>কোথায় mismatch হচ্ছে।</p>
+<h3 id="situation-c-problem">Situation C — মানুষ problem-টিই গুরুত্ব দিচ্ছে না</h3>
+<p>তাহলে নতুন problem test করুন।</p>
+<p>কিন্তু এবার আগের ৩০ দিনের evidence সঙ্গে নিয়ে শুরু করবেন।</p>
+<p>অর্থাৎ কোনও experiment “নষ্ট” যায় না।</p>
+<p><strong>Result-ই পরবর্তী experiment-এর input।</strong></p>
+<hr />
+<h1 id="section-16">একটি গুরুত্বপূর্ণ সংশোধন</h1>
+<p>আপনার আগের পরিকল্পনায় একটি জায়গায় আমি আরও কঠোর নিয়ম রাখব।</p>
+<p><strong>Audience vote-কে business decision-এর একমাত্র ভিত্তি করবেন না।</strong></p>
+<p>কারণ:</p>
+<blockquote>
+<p>মানুষ কোনও idea-কে ভালো বলতেই পারে, কিন্তু তার জন্য টাকা নাও দিতে পারে।</p>
+</blockquote>
+<p>তাই আপনার evidence hierarchy হবে:</p>
+<p><strong>Comment / Like</strong>
+↓
+<strong>Interest</strong>
+↓
+<strong>Actual Use</strong>
+↓
+<strong>Specific Feedback</strong>
+↓
+<strong>Purchase Intent</strong>
+↓
+<strong>Actual Purchase</strong></p>
+<p>সবচেয়ে নিচের দিকের evidence-কে বেশি গুরুত্ব দেবেন।</p>
+<p>এটাই আপনার public experiment-কে শুধু content game না রেখে <strong>বাস্তব business validation process</strong> বানাবে।</p>
+<hr />
+<h1 id="reusable-ai-prompt-library">এখন আপনার Reusable AI Prompt Library</h1>
+<p>নিচের prompt-গুলি আপনি আলাদা আলাদা নতুন ChatGPT chat-এ ব্যবহার করতে পারবেন। শুধু <code>[placeholder]</code>-এর জায়গাগুলি বদলাবেন।</p>
+<hr />
+<h2 id="prompt-1-experiment-idea-generator">Prompt 1 — Experiment Idea Generator</h2>
+<div class="code-card prompt-card" id="prompt-14"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 1 — Experiment Idea Generator">Copy Prompt</button></div><pre><code class="language-text">আমি একটি [DURATION]-দিনের public experiment চালাতে চাই।
+
+আমার লক্ষ্য:
+[GOAL]
+
+আমার target audience:
+[TARGET AUDIENCE]
+
+আমার skill:
+[SKILLS]
+
+Audience-এর পরিচিত সমস্যা:
+[KNOWN PROBLEMS]
+
+আমি যে solution format-এ কাজ করতে পারি:
+[SOLUTION FORMATS]
+
+আমার প্রতিদিনের available time:
+[AVAILABLE TIME]
+
+আমার budget:
+[BUDGET]
+
+আমার available tools:
+[TOOLS]
+
+আমার limitations:
+[LIMITATIONS]
+
+আমার জন্য [NUMBER]টি ছোট, বাস্তবে test করা যায় এমন experiment তৈরি করুন।
+
+প্রতিটির জন্য দিন:
+
+1. Problem
+2. Target person
+3. Smallest useful solution
+4. Experiment
+5. Test duration
+6. Evidence to collect
+7. Possible paid offer
+8. Main uncertainty
+
+বড়, জটিল বা দীর্ঘমেয়াদি business idea বাদ দিন।
+
+শুধু এমন experiment দিন যা একজন ব্যক্তি [TIME LIMIT]-এর মধ্যে নিজে execute করতে পারেন।
+
+কোনও result বা demand আগে থেকেই নিশ্চিত ধরে নেবেন না।
+</code></pre></div>
+<hr />
+<h1 id="prompt-2-audience-response-analyzer">Prompt 2 — Audience Response Analyzer</h1>
+<div class="code-card prompt-card" id="prompt-15"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 2 — Audience Response Analyzer">Copy Prompt</button></div><pre><code class="language-text">আমার target audience:
+[TARGET AUDIENCE]
+
+আমার current experiment:
+[EXPERIMENT]
+
+আমি audience-এর কাছ থেকে এই responses পেয়েছি:
+
+[RESPONSES]
+
+এই responses বিশ্লেষণ করুন।
+
+প্রতিটির জন্য দেখান:
+
+1. Mentioned problem
+2. Desired outcome
+3. Demand signal
+4. Objection
+5. Question
+6. Exact evidence from the response
+
+তারপর recurring patterns আলাদা করুন।
+
+শেষে দেখান:
+
+- সবচেয়ে বেশি উল্লেখ হওয়া problem
+- সবচেয়ে বেশি উল্লেখ হওয়া objection
+- সবচেয়ে পরিষ্কার demand signal
+- এখনও যে প্রশ্নগুলির উত্তর পাওয়া যায়নি
+
+Audience যা বলেনি, তা fact হিসেবে যোগ করবেন না।
+Interpretation এবং observed response আলাদা রাখুন।
+</code></pre></div>
+<hr />
+<h1 id="prompt-3-problem-to-solution-designer">Prompt 3 — Problem-to-Solution Designer</h1>
+<div class="code-card prompt-card" id="prompt-16"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 3 — Problem-to-Solution Designer">Copy Prompt</button></div><pre><code class="language-text">Target audience:
+[TARGET AUDIENCE]
+
+Problem:
+[PROBLEM]
+
+Current situation:
+[CURRENT SITUATION]
+
+Desired situation:
+[DESIRED SITUATION]
+
+Available solution formats:
+[SOLUTION FORMATS]
+
+Time available to create:
+[TIME]
+
+এখন একটি Minimum Useful Solution ডিজাইন করুন।
+
+দেখান:
+
+1. Solution objective
+2. Core components
+3. User steps
+4. Required inputs
+5. Expected immediate output
+6. What to exclude
+7. How to test it with real users
+
+Solution-টি যতটা সম্ভব ছোট, পরিষ্কার এবং ব্যবহারযোগ্য রাখুন।
+
+অপ্রয়োজনীয় feature বা bonus যোগ করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="prompt-4-content-episode-generator">Prompt 4 — Content Episode Generator</h1>
+<div class="code-card prompt-card" id="prompt-17"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 4 — Content Episode Generator">Copy Prompt</button></div><pre><code class="language-text">আজকের experiment:
+
+[EXPERIMENT]
+
+Today's goal:
+[GOAL]
+
+Today's attempt:
+[ATTEMPT]
+
+Problem:
+[PROBLEM]
+
+Adjustment:
+[ADJUSTMENT]
+
+Result:
+[RESULT]
+
+Audience:
+[TARGET AUDIENCE]
+
+এখন এই experiment-কে একটি natural content episode-এ রূপ দিন।
+
+Structure:
+
+1. Hook
+2. What I am trying
+3. Why I am trying it
+4. What happened
+5. Problem
+6. Adjustment
+7. Result
+8. Audience question
+9. Next episode setup
+
+Content length:
+[LENGTH]
+
+Format:
+[VIDEO / POST / REEL / ARTICLE]
+
+ভাষা হবে সহজ, conversational এবং বাস্তব।
+
+অতিরঞ্জিত success claim করবেন না।
+Result না থাকলে result বানাবেন না।
+</code></pre></div>
+<hr />
+<h1 id="prompt-5-objection-analyzer">Prompt 5 — Objection Analyzer</h1>
+<div class="code-card prompt-card" id="prompt-18"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 5 — Objection Analyzer">Copy Prompt</button></div><pre><code class="language-text">Offer:
+[OFFER]
+
+Target audience:
+[TARGET AUDIENCE]
+
+Price:
+[PRICE]
+
+Audience responses:
+[RESPONSES]
+
+Responses বিশ্লেষণ করে objections-কে এই category-তে ভাগ করুন:
+
+1. Problem
+2. Need
+3. Offer clarity
+4. Price
+5. Trust
+6. Format
+7. Timing
+8. No interest
+9. Other
+
+প্রতিটি category-র জন্য actual evidence দেখান।
+
+তারপর বলুন:
+
+- কোন objection সরাসরি বলা হয়েছে
+- কোন বিষয় শুধু সম্ভাব্য interpretation
+- কোন objection test করার জন্য পরবর্তী experiment করা যায়
+
+কোনও কারণকে নিশ্চিত কারণ হিসেবে ঘোষণা করবেন না যদি data তা support না করে।
+</code></pre></div>
+<hr />
+<h1 id="prompt-6-experiment-result-analyzer">Prompt 6 — Experiment Result Analyzer</h1>
+<div class="code-card prompt-card" id="prompt-19"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 6 — Experiment Result Analyzer">Copy Prompt</button></div><pre><code class="language-text">Experiment:
+[EXPERIMENT]
+
+Original hypothesis:
+[HYPOTHESIS]
+
+Goal:
+[GOAL]
+
+Data:
+[DATA]
+
+Audience feedback:
+[FEEDBACK]
+
+Revenue:
+[REVENUE]
+
+Expenses:
+[EXPENSES]
+
+এই experiment-এর analysis করুন।
+
+আলাদা section-এ দেখান:
+
+1. Observed facts
+2. Evidence supporting the hypothesis
+3. Evidence against the hypothesis
+4. Unknowns
+5. Problems
+6. Possible explanations
+7. Next experiment
+8. What should remain unchanged
+
+কোনও unsupported conclusion দেবেন না।
+
+যেখানে data যথেষ্ট নয়, সেখানে স্পষ্টভাবে বলুন:
+“যথেষ্ট data নেই।”
+</code></pre></div>
+<hr />
+<h1 id="prompt-7-product-ladder-designer">Prompt 7 — Product Ladder Designer</h1>
+<div class="code-card prompt-card" id="prompt-20"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 7 — Product Ladder Designer">Copy Prompt</button></div><pre><code class="language-text">Target audience:
+[TARGET AUDIENCE]
+
+Core problem:
+[PROBLEM]
+
+Desired outcome:
+[OUTCOME]
+
+Existing free content:
+[FREE CONTENT]
+
+Existing paid solution:
+[PAID SOLUTION]
+
+Audience demand evidence:
+[DEMAND EVIDENCE]
+
+এখন একটি simple product ladder তৈরি করুন:
+
+Level 1 — Free
+Level 2 — Low-priced paid
+Level 3 — Complete paid solution
+
+প্রতিটির জন্য দেখান:
+
+1. Purpose
+2. User problem addressed
+3. What is included
+4. What is excluded
+5. Next step
+
+শুধু evidence-supported demand-এর ভিত্তিতে structure তৈরি করুন।
+
+Artificial upsell বা unnecessary product যোগ করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="prompt-8-daily-execution-planner">Prompt 8 — Daily Execution Planner</h1>
+<div class="code-card prompt-card" id="prompt-21"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 8 — Daily Execution Planner">Copy Prompt</button></div><pre><code class="language-text">আমার current experiment:
+[EXPERIMENT]
+
+Current day:
+[DAY]
+
+Previous result:
+[PREVIOUS RESULT]
+
+Audience feedback:
+[AUDIENCE FEEDBACK]
+
+Current uncertainty:
+[UNCERTAINTY]
+
+Available time today:
+[TIME]
+
+আজকের জন্য একটি বাস্তব execution plan তৈরি করুন।
+
+শুধু এই পাঁচটি অংশ দিন:
+
+1. Today's Goal
+2. Exact Action
+3. Evidence to Collect
+4. Content to Publish
+5. Audience Question
+
+প্রতিটি action এমনভাবে লিখুন যেন আমি এখনই ফোন বা কম্পিউটার খুলে step-by-step কাজ শুরু করতে পারি।
+
+আজ একটির বেশি major variable পরিবর্তন করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="prompt-9-30-day-final-analysis">Prompt 9 — 30-Day Final Analysis</h1>
+<div class="code-card prompt-card" id="prompt-22"><div class="code-toolbar"><span class="code-kind">PROMPT</span><button class="copy-button" type="button" aria-label="Copy prompt: Prompt 9 — 30-Day Final Analysis">Copy Prompt</button></div><pre><code class="language-text">আমি একটি [DURATION]-দিনের public experiment সম্পন্ন করেছি।
+
+Mission:
+[MISSION]
+
+Original hypothesis:
+[HYPOTHESIS]
+
+Experiment log:
+[EXPERIMENT DATA]
+
+Content data:
+[CONTENT DATA]
+
+Audience feedback:
+[AUDIENCE FEEDBACK]
+
+Sales data:
+[SALES DATA]
+
+Revenue:
+[REVENUE]
+
+Expenses:
+[EXPENSES]
+
+এখন পুরো journey বিশ্লেষণ করুন।
+
+Structure:
+
+1. Starting point
+2. Original hypothesis
+3. Major experiments
+4. Major problems
+5. Adjustments
+6. Observed results
+7. Audience behaviour
+8. Monetization results
+9. What was learned
+10. What remains unknown
+11. Next experiment
+12. Final evidence summary
+
+Observed facts, interpretation এবং uncertainty আলাদা রাখুন।
+
+কোনও success claim data-এর বাইরে করবেন না।
+</code></pre></div>
+<hr />
+<h1 id="operating-principle">সবশেষে আপনার পুরো ৩০ দিনের Operating Principle</h1>
+<p>আপনি যদি পুরো পরিকল্পনাটি একটিমাত্র flow হিসেবে মনে রাখতে চান, শুধু এটুকু মনে রাখুন:</p>
+<blockquote>
+<p><strong>প্রথমে কিছু করার সিদ্ধান্ত নিন।</strong>
+<strong>তারপর সত্যিই সেটা করুন।</strong>
+<strong>কী হল সেটা record করুন।</strong>
+<strong>যা হল, সেটা প্রকাশ করুন।</strong>
+<strong>মানুষ কী বলল ও কী করল সেটা দেখুন।</strong>
+<strong>সেই evidence থেকে একটি মাত্র পরিবর্তন করুন।</strong>
+<strong>আবার করুন।</strong>
+<strong>যেখানে মানুষ বাস্তবে value দেখায়, সেখানে ছোট paid offer দিন।</strong>
+<strong>তারপর সেই offer-কে evidence অনুযায়ী উন্নত করুন।</strong></p>
+</blockquote>
+<p>অর্থাৎ আপনার ৩০ দিনের আসল workflow:</p>
+<p><strong>Goal</strong>
+↓
+<strong>Attempt</strong>
+↓
+<strong>Problem</strong>
+↓
+<strong>Adjustment</strong>
+↓
+<strong>Result</strong>
+↓
+<strong>Content</strong>
+↓
+<strong>Audience Response</strong>
+↓
+<strong>Next Goal</strong></p>
+<p>এবং monetization loop:</p>
+<p><strong>Audience Problem</strong>
+↓
+<strong>Small Solution</strong>
+↓
+<strong>Real Use</strong>
+↓
+<strong>Paid Test</strong>
+↓
+<strong>Feedback</strong>
+↓
+<strong>Improved Offer</strong>
+↓
+<strong>Repeat</strong></p>
+<p><strong>তাই আপনার কাজের সবচেয়ে গুরুত্বপূর্ণ নিয়ম হবে: নতুন content খুঁজবেন না—নতুন evidence তৈরি করুন।</strong></p>
+<p>সেই evidence-ই আপনার পরবর্তী content, পরবর্তী experiment এবং ধীরে ধীরে আপনার monetization-এর ভিত্তি হবে।</p>
+
+    </main>
+    <footer class="footer">Copyright © <script>document.write(new Date().getFullYear())</script> Siva Prasad Mukherjee. All Rights Reserved.</footer>
+  </div>
+  <div class="copy-status" aria-live="polite" role="status"></div>
+  <script>
+    (() => {
+      const status = document.querySelector('.copy-status');
+      let statusTimer;
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        const field = document.createElement('textarea');
+        field.value = text;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.left = '-9999px';
+        document.body.appendChild(field);
+        field.select();
+        const copied = document.execCommand('copy');
+        field.remove();
+        if (!copied) throw new Error('Clipboard unavailable');
+      }
+      document.addEventListener('click', async (event) => {
+        const button = event.target.closest('.copy-button');
+        if (!button) return;
+        const code = button.closest('.code-card')?.querySelector('pre code');
+        if (!code) return;
+        const originalLabel = button.dataset.originalLabel || button.textContent;
+        button.dataset.originalLabel = originalLabel;
+        try {
+          await copyText(code.textContent);
+          button.textContent = 'Copied!';
+          status.textContent = originalLabel === 'Copy Prompt' ? 'Prompt copied to clipboard' : 'Text copied to clipboard';
+          status.classList.add('visible');
+        } catch (_) {
+          button.textContent = 'Copy failed';
+          status.textContent = 'Clipboard access is unavailable in this browser';
+          status.classList.add('visible');
+        }
+        window.clearTimeout(statusTimer);
+        statusTimer = window.setTimeout(() => {
+          button.textContent = originalLabel;
+          status.classList.remove('visible');
+        }, 1600);
+      });
+      document.querySelectorAll('.prompt-directory a[href^="#prompt-"]').forEach((link) => {
+        link.addEventListener('click', () => {
+          const details = link.closest('details');
+          if (details) details.open = false;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
